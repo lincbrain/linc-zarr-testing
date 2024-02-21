@@ -24,15 +24,13 @@ zarr_store_path = 'zarr/9f342f9b-e589-4bbc-8ebd-665d0123af77/'
 # Create a Zarr store using s3fs
 store = s3fs.S3Map(root=f'{bucket}/{zarr_store_path}', s3=s3, check=False)
 
-# Open the Zarr store using xarray for more complex data structures (optional)
-# ds = xr.open_zarr(store)
-
 # Or open the Zarr store using zarr directly for simple arrays
 zarr_group = zarr.open(store, mode='r')
 
-# Specify the subset you want to read, e.g., first 10 elements of some dataset
-# This will depend on your Zarr store's structure; here's a generic example
-data_subset = zarr_group['your_dataset_name'][:10, :10]  # Adjust according to your dataset's dimensions
+dataset = zarr_group["0"]
+
+# Here we're reading a 10x10x10 block from the start of the dataset
+data_subset = dataset[0, 0, :10, :10, :10]
 
 # Iterate over the subset
 for element in data_subset:
