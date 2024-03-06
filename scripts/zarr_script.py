@@ -19,11 +19,17 @@ client = Client()
 repo = client.get_repo("gablab/aaronkanzer")
 print_event("Get Arraylake Client")
 
-repo.new_branch("aaron-branch-1")
-# repo.checkout(ref='aaron-branch-1', for_writing=True)
+arraylake_branch_name = "aaron-branch-1"
+try:
+    repo.new_branch(arraylake_branch_name)
+except:
+    print(f'Branch {arraylake_branch_name} already exists')
+
+repo.checkout(ref=arraylake_branch_name, for_writing=True)
+
+## TODO: Write some instructions for how to go back in time and checkout a given commit in a given branch
 # repo.checkout('65ddebeee0a8c739300e3feb', for_writing=True)
 print_event("Checkout Branch")
-
 
 zarr_group = repo.root_group
 zarr_group.attrs['title'] = "Zarr Versioning Proof of Concept"
@@ -43,13 +49,13 @@ print_event(f"Get subset {zarr_array_dataset}")
 
 subset = zarr_array_dataset[0, 0, :10, :10, :10]
 old_value = subset[0, 0, 1]
-print_event(f"Old subset value: {old_value}")
+print_event(f"Old subset value: {old_value} -- ")
 
 subset[0, 0, 1] = subset[0, 0, 1] + 20
 new_value = subset[0, 0, 1]
-print_event(f"New subset value: {new_value}")
+print_event(f"New subset value: {new_value} -- ")
 
-
+# Sample code to create a new grouping -- need to change group_name per run of script
 group_names = list(zarr_group)
 group_name = "friday-feb-25"
 if group_name not in group_names:
@@ -61,12 +67,9 @@ if group_name not in group_names:
         fill_value=0
     )
 
-repo.commit(f'{get_unique_identifier()} Old: {old_value}, New: {new_value}')
+repo.commit(f'{get_unique_identifier(arraylake_branch_name)} Old: {old_value}, New: {new_value}')
 
-
-
-# repo.commit(f'{get_unique_identifier()} Old: {old_value}, New: {new_value}')
-
+#### More sample code for a more robust alteration
 # Get array to alter
 # new_array = zarr_group.get("new_zarr_test")
 #

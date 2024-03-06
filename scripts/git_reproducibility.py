@@ -29,6 +29,6 @@ def get_git_author_name():
     return subprocess.check_output(["git", "log", "-1", "--pretty=format:%an"]).decode("utf-8").strip()
 
 
-def get_unique_identifier():
-    return (f"Branch: {get_git_remote_url()}, SHA: {get_git_commit_sha()}, "
+def get_unique_identifier(arraylake_branch):
+    return (f"Arraylake Branch: {arraylake_branch}, Local Branch: {get_git_remote_url()}, SHA: {get_git_commit_sha()}, "
             f"Author: {get_git_author_name()}, Timestamp: {get_current_timestamp()}")
