@@ -29,6 +29,23 @@ async def generate_temporary_credentials(bucket_name, prefix, duration_seconds=3
         return None
 
 
+async def list_files_in_s3(bucket_name, prefix, credentials):
+    session = aioboto3.Session()
+    try:
+        async with session.client(
+            's3',
+            aws_access_key_id=credentials['AccessKeyId'],
+            aws_secret_access_key=credentials['SecretAccessKey'],
+            aws_session_token=credentials['SessionToken']
+        ) as s3_client:
+            paginator = s3_client.get_paginator('list_objects_v2')
+            async for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
+                for obj in page.get('Contents', []):
+                    print(obj['Key'])
+    except ClientError as e:
+        print(f"Error listing files in S3: {e}")
+
+
 async def main():
     bucket_name = "linc-brain-mit-staging-us-east-2"
     prefix = "zarr/"
@@ -38,6 +55,8 @@ async def main():
     if credentials:
         print("Temporary Credentials:")
         print(json.dumps(credentials, indent=4, default=str))
+        print("\nListing files in the bucket:\n")
+        await list_files_in_s3(bucket_name, prefix, credentials)
     else:
         print("Failed to generate credentials.")
 
