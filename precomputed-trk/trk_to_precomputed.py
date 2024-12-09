@@ -43,6 +43,7 @@ log_resource_usage("After Calculating Streamline Memory")
 output_dir = './precomputed_streamlines_1'
 mkdir(output_dir)
 
+
 # Define CloudVolume info
 info = CloudVolume.create_new_info(
     num_channels=1,                     # Single channel for streamlines
