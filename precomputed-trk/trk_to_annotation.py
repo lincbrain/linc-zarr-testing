@@ -62,7 +62,7 @@ def process_streamline(streamline_idx, streamline, inverse_affine, volume_shape,
         cell_z = int(start[2] // chunk_size[2])
         cell_key = f"{cell_x}_{cell_y}_{cell_z}"
 
-        annotation_id = annotation_count  # Use integer ID
+        annotation_id = streamline_idx * 10000 + i  # Unique ID for each annotation
         annotation = {
             "id": annotation_id,
             "pointA": start.tolist(),
