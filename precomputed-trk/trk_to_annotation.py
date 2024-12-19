@@ -110,13 +110,17 @@ for cell_key, annotations in spatial_index.items():
         with open(cell_file, 'wb') as f:
             # Write number of annotations as countLow and countHigh
             # f.write(struct.pack('<II', len(annotations), 0))  # Little-endian uint32
-            f.write(np.asarray(len(annotations), dtype='<f2').tobytes())
+            f.write(np.asarray(len(annotations), dtype='<u8').tobytes())
 
             for start, end in annotations:
                 # Write start and end points as float32
                 # f.write(struct.pack('<6f', *(start.tolist() + end.tolist())))
-                f.write(np.asarray(start, dtype='<f2').tobytes())
-                f.write(np.asarray(end, dtype='<f2').tobytes())
+                f.write(np.asarray(start, dtype='<f4').tobytes())
+                f.write(np.asarray(end, dtype='<f4').tobytes())
+
+            for annotation_id in range(len(annotations)):
+                f.write(np.asarray(annotation_id, dtype='<u8').tobytes())  # Write ID as uint64le
+
         print(f"Saved spatial index for {cell_key} with {len(annotations)} annotations.")
 
 # Save info file
