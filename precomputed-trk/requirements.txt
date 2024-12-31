@@ -1,3 +1,4 @@
 dipy
 numpy
-cloud-volume
+nibabel
+psutil
